@@ -1,3 +1,37 @@
+body {
+    min-height: 90vh;
+    display: grid;
+    place-items: center;
+    background-image: url(tetrisbg.jpg);
+}
+
+h2 {
+    letter-spacing: .5cm;
+    text-transform: uppercase;
+    color: white;
+    font-size: xx-large;
+    border-radius: 5px;
+}
+
+h3 {
+    letter-spacing: .5cm;
+    text-transform: uppercase;
+    color: white;
+    font-size: xx-large;
+}
+
+#start-button {
+    display: block;
+    width: 20%;
+    padding: 20px;
+}
+
+#start-button:hover {
+    color: #fff;
+    background: rgba(152, 152, 152);
+    cursor: pointer;
+}
+
 .container {
     display: flex;
 }
@@ -8,6 +42,7 @@
     display: flex;
     flex-wrap: wrap;
     background-color: yellow;
+    border: 1px solid rgb(153, 153, 153)
 }
 
 .grid div {
@@ -26,6 +61,7 @@
     display: flex;
     flex-wrap: wrap;
     background-color: yellow;
+    border: 1px solid rgb(153, 153, 153);
 }
 
 .mini-grid div {
