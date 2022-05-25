@@ -30,8 +30,34 @@ function startGame(){
 
 function freeFall(){
     freeFallID = setInterval(() =>{
+        let hit = hitTest()
 
+        if(hit){
+            changeActiveBlock()
+
+        }else{
+            activeBlock.forEach(square => square.style.marginTop = `${marginTop(square)+26}px`)
+        }
     },1000)
+}
+
+function changeActiveBlock(){
+    let nextBlock = document.querySelector(`#score-board img`)
+    let nextBlockType = nextBlock.getAttribute('src')[0]
+    generateBlock(nextBlockType)
+    activeBlock = Array.from(document.querySelectorAll(`#play-board img`)).slice(0,4)
+    activeBlockType = nextBlockType
+    nextBlock.src = `${randomBlockType()} block.png`
+}
+
+function hitTest(){
+    let hit = false
+    activeBlock.forEach((square)=>{
+        if(marginTop(square)==494){
+            hit = true
+        }
+    })
+    return hit
 }
 
 function marginLeft(square){
