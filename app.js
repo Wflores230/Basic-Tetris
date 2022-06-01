@@ -1,12 +1,30 @@
 let gameStarted = false
+let arrowLeftPressed = false
+let arrowRightPressed = false
 let activeBlock
 let activeBlockType
 let freeFallID
+let controlID
 
 
 document.addEventListener('keydown', (e)=> {
     if(e.key=="Enter" && !gameStarted){
         startGame()
+    }
+    else if(e.key=='ArrowLeft'){
+        arrowLeftPressed = true
+    }
+    else if(e.key=='ArrowRight'){
+        arrowRightPressed = true
+    }
+})
+
+document.addEventListener('keyup', (e)=> {
+    if(e.key=='ArrowLeft'){
+        arrowLeftPressed = false
+    }
+    else if(e.key=='ArrowRight'){
+        arrowRightPressed = false
     }
 })
 
@@ -26,13 +44,23 @@ function startGame(){
         <img src='${randomBlockType()} block.png'>
     `)
     freeFall()
+    control()
+}
+
+function control(){
+    controlID = setInterval(()=> {
+        if(arrowLeftPressed){
+            !hitTest('left') && activeBlock.forEach(square => square.style.marginLeft = `${marginLeft(square)-26}px`)
+        }
+        if(arrowRightPressed){
+            !hitTest('right') && activeBlock.forEach(square => square.style.marginLeft = `${marginLeft(square)+26}px`)
+        }
+    },50)
 }
 
 function freeFall(){
     freeFallID = setInterval(() =>{
-        let hit = hitTest()
-
-        if(hit){
+         if(hitTest('down')){
             changeActiveBlock()
 
         }else{
@@ -50,11 +78,31 @@ function changeActiveBlock(){
     nextBlock.src = `${randomBlockType()} block.png`
 }
 
-function hitTest(){
+function hitTest(direction){
     let hit = false
-    activeBlock.forEach((square)=>{
-        if(marginTop(square)==494){
-            hit = true
+    activeBlock.forEach((square_A)=>{
+        if(direction=='down'){
+            if(marginTop(square_A)==494){
+                hit = true
+            }
+            Array.from(document.querySelectorAll(`#play-board img`)).slice(4).forEach((square_B) =>{
+                if(marginTop(square_A)+26==marginTop(square_B) && marginLeft(square_A)==marginLeft(square_B)){
+                    hit=true
+                }
+            })
+        }
+        else{
+            let valueA = (direction=='left')  ? 0 : 234
+            let valueB = (direction=='left')  ? -26 : 26
+
+            if(marginLeft(square_A)==valueA) {
+                hit = true
+            }
+            Array.from(document.querySelectorAll(`#play-board img`)).slice(4).forEach((square_B) =>{
+                if(marginLeft(square_A)+valueB==marginLeft(square_B) && marginTop(square_A)==marginTop(square_B)){
+                    hit = true
+                }
+            })
         }
     })
     return hit
