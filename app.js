@@ -1,6 +1,7 @@
 let gameStarted = false
 let arrowLeftPressed = false
 let arrowRightPressed = false
+let arrowDownPressed = false
 let activeBlock
 let activeBlockType
 let freeFallID
@@ -17,6 +18,28 @@ document.addEventListener('keydown', (e)=> {
     else if(e.key=='ArrowRight'){
         arrowRightPressed = true
     }
+    else if(e.key=='ArrowDown'){
+        arrowDownPressed = true
+    }
+    else if(e.keyCode=='32' && !e.repeat){
+        let distances = []
+
+        activeBlock.forEach((square_A)=>{
+            Array.from(document.querySelectorAll('#play-board img')).slice(4).forEach((square_B)=>{
+                if(marginLeft(square_A)==marginLeft(square_B) && marginTop(square_B)>marginTop(square_A)){
+                    distances.push(marginTop(square_B)-marginTop(square_A)-26)
+                }
+            })
+        })
+
+        let marginTopValues = activeBlock.map(square => marginTop(square))
+        let maxMarginTopValue = Math.max.apply(Math,marginTopValues)
+        distances.push(494-maxMarginTopValue)
+
+        let shortestDistance = Math.min.apply(Math,distances)
+        activeBlock.forEach(square => square.style.marginTop = `${marginTop(square)+shortestDistance}px`)
+        changeActiveBlock()
+    }
 })
 
 document.addEventListener('keyup', (e)=> {
@@ -25,6 +48,9 @@ document.addEventListener('keyup', (e)=> {
     }
     else if(e.key=='ArrowRight'){
         arrowRightPressed = false
+    }
+    else if(e.key=='ArrowDown'){
+        arrowDownPressed = false
     }
 })
 
@@ -54,6 +80,14 @@ function control(){
         }
         if(arrowRightPressed){
             !hitTest('right') && activeBlock.forEach(square => square.style.marginLeft = `${marginLeft(square)+26}px`)
+        }
+        if(arrowDownPressed){
+            if(hitTest('down')){
+                changeActiveBlock()
+            }
+            else{
+                activeBlock.forEach(square => square.style.marginTop = `${marginTop(square)+26}px`)
+            }
         }
     },50)
 }
